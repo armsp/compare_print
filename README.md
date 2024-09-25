@@ -25,4 +25,4 @@ generate_llm_outputs()
 ```
 
 ## Output
-[Output](./docs/output.png)
+![Output](./docs/output.png)
