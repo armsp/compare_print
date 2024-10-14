@@ -49,15 +49,26 @@ def compare_print(background_colors=None, labels=None):
             
             # Create a column for each LLM output with a pastel background and safe text color
             for i in range(num_outputs):
+                # Format the output differently if it is a list
+                if isinstance(outputs[i], list):
+                    formatted_output = "".join(
+                        f"<div style='border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;'>{item}</div>"
+                        for item in outputs[i]
+                    )
+                else:
+                    # Treat it as a regular string output
+                    formatted_output = f"<p>{outputs[i]}</p>"
+                
+                # Add the content to the HTML for the current panel
                 html_content += f"""
                 <div style='flex: 1; margin: 3px; padding: 10px; border: 1px solid #ddd; 
                              background-color: {background_colors[i]}; color: {text_color};'>
                     <h3 style='color: {text_color};'>{labels[i]}</h3>
-                    <p>{outputs[i]}</p>
+                    {formatted_output}
                 </div>
                 """
             
-            # Close the div
+            # Close the main div
             html_content += "</div>"
             
             # Display the HTML content in the Jupyter Notebook cell
@@ -70,10 +81,10 @@ if __name__ == "__main__":
     # Example usage with a decorated function
     @compare_print(labels=["Model A", "Model B", "Model C"])
     def generate_llm_outputs():
-        # Simulate generating outputs from LLMs
+        # Simulate generating outputs from LLMs, with one output being a list
         return [
             "This is the output of the first LLM.",
-            "This is the output of the second LLM.",
+            ["Item 1 of second LLM", "Item 2 of second LLM", "Item 3 of second LLM"],
             "This is the output of the third LLM."
         ]
 
