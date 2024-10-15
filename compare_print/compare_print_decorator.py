@@ -49,12 +49,25 @@ def compare_print(background_colors=None, labels=None):
             
             # Create a column for each LLM output with a pastel background and safe text color
             for i in range(num_outputs):
-                # Format the output differently if it is a list
+                # Format the output differently if it is a list or list or list of tuples
                 if isinstance(outputs[i], list):
-                    formatted_output = "".join(
-                        f"<div style='border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;'>{item}</div>"
-                        for item in outputs[i]
-                    )
+                    formatted_output = ""
+                    for item in outputs[i]:
+                        if isinstance(item, tuple) and len(item) == 2:
+                            text, score = item
+                            formatted_output += f"""
+                            <div style='position: relative; border: 1px solid #ccc; padding: 5px; margin-bottom: 16px;'>
+                                <span style='position: absolute; top: -12px; right: -4px; background-color: #ddd; 
+                                             border-radius: 12px; padding: 2px 8px; font-size: 0.8em; color: #555;'>
+                                    {score}
+                                </span>
+                                {text}
+                            </div>
+                            """
+
+                        else:
+                            # Fallback for non-tuple list elements
+                            formatted_output += f"<div style='border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;'>{item}</div>"
                 else:
                     # Treat it as a regular string output
                     formatted_output = f"<p>{outputs[i]}</p>"
@@ -63,7 +76,7 @@ def compare_print(background_colors=None, labels=None):
                 html_content += f"""
                 <div style='flex: 1; margin: 3px; padding: 10px; border: 1px solid #ddd; 
                              background-color: {background_colors[i]}; color: {text_color};'>
-                    <h3 style='color: {text_color};'>{labels[i]}</h3>
+                    <h4 style='color: {text_color};'>{labels[i]}</h4>
                     {formatted_output}
                 </div>
                 """
